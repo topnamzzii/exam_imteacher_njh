@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">아이마커-교사용</string>
+
+    <!--Server Config //2020.03.18_김현우작성-->
+    <string name="TAG">imteacher</string>
+    <string name="URL_INDEX_FULL">http://imarker.kr/KMW-01/index.php</string>
+    <string name="SERVICE_USER">teacher</string>
+</resources>
