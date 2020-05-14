@@ -23,7 +23,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <!--네트워크 변화를 감지 위해  'android.net.conn.CONNECTIVITY_CHANGE' 필터를 가지는 receiver를 등록-->
+        <receiver
+            android:name="com.example.unit.NetworkReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter >
+                <action android:name="android.net.conn.BACKGROUND_DATA_SETTING_CHANGED" />
+            </intent-filter>
+        </receiver>
         <service android:name="com.example.fcm.FirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

@@ -20,6 +20,7 @@ import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.RingtoneManager;
 import android.media.SoundPool;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import com.example.unit.NetworkReceiver;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 
@@ -55,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
     private SoundPool sp01; //알람음
     private int soundId;
     private int push_index; // 상단 알람바에 알림이 겹치지않게 하기위한 noti인덱스
+    private IntentFilter filter_chage_network; //네트워크 변동을 감지하는 필터
+    private NetworkReceiver nr; //네트워크 변동을 감지하는 리시버
 
 
 
@@ -106,6 +110,11 @@ public class MainActivity extends AppCompatActivity {
 
             }
         };
+
+        //네트워크 변동을 감지하는 리시버 등록
+        filter_chage_network = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        nr = new NetworkReceiver();
+        registerReceiver(nr, filter_chage_network);
     }
 
     //소프트웨어 정보 가져오기 함수
@@ -300,15 +309,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        Log.i(TAG,"언 레지스트시킴");
+        LocalBroadcastManager.getInstance(mContext).unregisterReceiver(message_receiver);// 푸시받는 리시버 해지
+        if (sp01!=null){// 사운드 리소스 반환
+            sp01.release();
+            sp01 = null;
+        }
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (nr!=null)unregisterReceiver(nr); //네트워크 변동을 감지하는 리시버 종료
+
     }
 }
